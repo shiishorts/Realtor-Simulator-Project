@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import json
 from extruct import JsonLdExtractor
 import time
+from collections import deque
 
 
 class House:
