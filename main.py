@@ -155,21 +155,44 @@ def compare_bfs_dfs(houses, preferred_rent):
 
 
 if __name__ == '__main__':
-    # variables
-    university = "university of florida"
-    city = "gainesville"
-    url = 'https://www.forrentuniversity.com/'
+  #variables
+  university = input("Enter the university name: ")
+  city = input("Enter the city name: ")
+  url = 'https://www.forrentuniversity.com/'#does not change
 
-    headers = {
-        'authority':
-            'www.forrentuniversity.com',
-        'user-agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 OPR/102.0.0.0'
-    }  # used to access the website [sends a signal saying that a computer is trying to access it]
+  headers = {
+      'authority':
+          'www.forrentuniversity.com',
+      'user-agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 OPR/102.0.0.0'
+  }  # used to access the website [sends a signal saying that a computer is trying to access it]
 
-    # menu1 stuff (get uni, city)
-    url = makeURL(url, university, city)
+  #menu1 stuff (get uni, city)
+  url = makeURL(url, university, city) #string of url
+  listHouses = getHousingList(url, headers) #array of House [use for BFS and DFS]
+  
 
-    listHouses = getHousingList(url, headers)
+  #menu2 stuff (price one)
+  # 11/22/2023 MONICA
+  while True:
+    print("1. Display All Houses")
+    print("2. Find Housing")
 
-    # menu2 stuff (price one)
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        for house in listHouses:
+          print(house)
+
+    elif choice == "2":
+        preferred_rent = input("Enter your preferred monthly rent: $")
+        print("\nFinding Housing:")
+        houses_result = compare_bfs_dfs(listHouses, preferred_rent)
+
+        if houses_result:
+            print("\nHouses found within a $50 rent range:")
+            for house in houses_result:
+                print(house)
+              
+    else:
+        print("Invalid choice. Try again.")
