@@ -7,7 +7,7 @@ import time
 
 
 class House:
-    def __init__(self, price, url):
+    def __init__(self, url, price):
         self.price = price
         self.url = url
 
@@ -24,14 +24,6 @@ def makeURL(site, university, city):  # puts together the url and returns url
     site = site + city  # add in city
     return site
 
-
-# idea is that when call DFS and BFS functions, we call thru measureTime to calculate time ran
-# def measureTime(func, *args):
-#   start_time = time.time()
-#   result = func(*args)    # call function, store result
-#   end_time = time.time()
-#   print(f"{func.__name__} took {end_time - start_time:.4f} seconds.")
-#   return result
 
 def getHousingList(site, header):
     response = requests.get(url=site, headers=header)
@@ -57,6 +49,109 @@ def getHousingList(site, header):
         houses.append(House(houseURL, price))  # create and add house to array
 
     return houses  # return houses
+
+
+# returns adj hosues for BFS and DFS
+def get_adjacent_houses(house, all_houses):
+  adjacency_threshold = 50
+
+  house_price = int(house.price.replace('$', '').replace(',', ''))
+
+  return [other_house for other_house in all_houses
+  if house != other_house
+  and abs(int(other_house.price.replace('$', '').replace(',', '')) - house_price) <= adjacency_threshold]
+
+
+def dfs_traverse_houses(houses, preferred_rent):
+  preferred_rent = int(preferred_rent)
+  
+  stack = []
+  visited_houses = set()
+  rent_range = 50    # return houses within a $50 range from preferred rent
+  matching_houses = []
+  
+  for house in houses:
+      if house not in visited_houses:
+          stack.append(house)
+          visited_houses.add(house)  # mark as visited
+  
+          while stack:
+              current_house = stack.pop()  # last house from the stack
+  
+              # Remove dollar sign and commas before converting to int
+              house_price = int(current_house.price.replace('$', '').replace(',', ''))
+  
+              # check if within range rent
+              if preferred_rent - rent_range <= house_price <= preferred_rent + rent_range:
+                  matching_houses.append(current_house)
+  
+              neighbors = get_adjacent_houses(current_house, houses)
+  
+              for neighbor in neighbors:
+                  if neighbor not in visited_houses:
+                      stack.append(neighbor)
+                      visited_houses.add(neighbor)
+  
+  return matching_houses
+
+
+
+# 11/22/2023 MONICA
+def bfs_traverse_houses(houses, preferred_rent):
+  # make into int
+  preferred_rent = int(preferred_rent)
+  
+  # *** I just had it return all houses within $50 range ***
+  rent_range = 50
+  
+  queue = deque(houses)
+  visited_houses = set()    # TODO: make sure we can use sets LOL
+  
+  matching_houses = []
+  
+  while queue:
+      current_house = queue.popleft()
+
+      if current_house in visited_houses:
+        continue
+  
+      # change house's price to an int
+      house_price = int(current_house.price.replace('$', '').replace(',', ''))
+  
+      # check if the house's price is within preferred rent range
+      if preferred_rent - rent_range <= house_price <= preferred_rent + rent_range:
+          matching_houses.append(current_house)
+
+
+      adjacent_houses = get_adjacent_houses(current_house, houses)
+    
+      queue.extend(adjacent_houses)
+
+      visited_houses.add(current_house)
+  
+  return matching_houses
+
+
+
+# 11/22/2023 MONICA
+def compare_bfs_dfs(houses, preferred_rent):
+  start_time_bfs = time.time()
+  bfs_result = bfs_traverse_houses(houses, preferred_rent)
+  end_time_bfs = time.time()
+
+  start_time_dfs = time.time()
+  dfs_result = dfs_traverse_houses(houses, preferred_rent)
+  end_time_dfs = time.time()
+
+  print(f"\nBFS took {end_time_bfs - start_time_bfs:.2f} seconds.")
+  print(f"DFS took {end_time_dfs - start_time_dfs:.2f} seconds.")
+
+  if bfs_result == dfs_result:
+      return bfs_result
+  else:
+      print("Results from BFS and DFS do not match.")
+      return None
+      
 
 
 if __name__ == '__main__':
