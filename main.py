@@ -60,6 +60,7 @@ def getHousingList(site, header):
     return houses  # return houses
 
 
+# MONICA
 def get_adjacent_houses(house, all_houses):
     adjacency_threshold = 50
 
@@ -70,12 +71,13 @@ def get_adjacent_houses(house, all_houses):
             and abs(int(other_house.price.replace('$', '').replace(',', '')) - house_price) <= adjacency_threshold]
 
 
+# MAR, MONICA
 def dfs_traverse_houses(houses, preferred_rent):
     preferred_rent = int(preferred_rent)
 
     stack = []
     visited_houses = set()
-    rent_range = 50
+    rent_range = 100
     matching_houses = []
 
     for house in houses:
@@ -92,6 +94,8 @@ def dfs_traverse_houses(houses, preferred_rent):
                 # within range rent?
                 if preferred_rent - rent_range <= house_price <= preferred_rent + rent_range:
                     matching_houses.append(current_house)
+                    # print(f"House within budget range (DFS): {current_house}")
+
 
                 neighbors = get_adjacent_houses(current_house, houses)
 
@@ -108,11 +112,11 @@ def bfs_traverse_houses(houses, preferred_rent):
     # make into int
     preferred_rent = int(preferred_rent)
 
-    # *** I just had it return all houses within $50 range ***
-    rent_range = 50
+    # return all houses within a $100 range from preferred rent
+    rent_range = 100
 
     queue = deque(houses)
-    visited_houses = set()  # TODO: make sure we can use sets LOL
+    visited_houses = set()
 
     matching_houses = []
 
@@ -128,6 +132,7 @@ def bfs_traverse_houses(houses, preferred_rent):
         # check if the house's price is within preferred rent range
         if preferred_rent - rent_range <= house_price <= preferred_rent + rent_range:
             matching_houses.append(current_house)
+            # print(f"House within budget range (BFS): {current_house}")
 
         adjacent_houses = get_adjacent_houses(current_house, houses)
 
@@ -151,6 +156,16 @@ def compare_bfs_dfs(houses, preferred_rent):
     print(f"\nBFS took {end_time_bfs - start_time_bfs:.2f} seconds.")
     print(f"DFS took {end_time_dfs - start_time_dfs:.2f} seconds.")
 
+    # reference: https://stackoverflow.com/questions/403421/how-do-i-sort-a-list-of-objects-based-on-an-attribute-of-the-objects
+    bfs_result.sort(key=lambda house: house.url)
+    dfs_result.sort(key=lambda house: house.url)
+
+    # no houses found within that rent range
+    if not bfs_result:
+        print("\nNo apartments found within the preferred rent range.")
+        return None
+
+    # make sure BFS and DFS work as intended
     if bfs_result == dfs_result:
         return bfs_result
     else:
