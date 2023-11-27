@@ -216,7 +216,7 @@ if __name__ == '__main__':
             houses_result = compare_bfs_dfs(listHouses, preferred_rent)
 
             if houses_result:
-                print("\nHouses found within a $50 rent range:")
+                print("\nHouses found within a $100 rent range:")
                 for house in houses_result:
                     print(house)
 
