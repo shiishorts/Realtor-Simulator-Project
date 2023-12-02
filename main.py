@@ -167,7 +167,13 @@ def compare_bfs_dfs(houses, preferred_rent):
 
     # make sure BFS and DFS work as intended
     if bfs_result == dfs_result:
-        return bfs_result
+        print("\nHouses found within a $100 rent range:")
+        for house in bfs_result:
+            print(house)
+
+        print("\nBFS took {:.6f} seconds.".format(end_time_bfs - start_time_bfs))
+        print("DFS took {:.6f} seconds.".format(end_time_dfs - start_time_dfs))
+        print()
     else:
         print("Results from BFS and DFS do not match.")
         return None
@@ -212,15 +218,10 @@ if __name__ == '__main__':
                 print(house)
             print()  # spacing
                     
-        elif choice == "2":
+                elif choice == "2":
             preferred_rent = input("Enter your preferred monthly rent: $")
-            print("\nFinding Housing:")
+            print("\nFinding Housing...")
             houses_result = compare_bfs_dfs(listHouses, preferred_rent)
-
-            if houses_result:
-                print("\nHouses found within a $100 rent range:")
-                for house in houses_result:
-                    print(house)
 
         elif choice == "3":
             print("Bye!")
