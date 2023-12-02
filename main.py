@@ -32,18 +32,17 @@ def getHousingList(site, header):
     # print(response) -> prints response code [404] if it does not exist
     # -> prints [200] if exists
 
-    code = str(response.status_code) #gets status code
+    code = str(response.status_code)
+    # gets status code
 
-    if code == "404": #checks to see if page exists
-        print("Please Restart the Program") #page does not exist
+    if code == "404":  # checks to see if page exists
+        print("Please Restart the Program")  # page does not exist
         exit("Invalid Location or University")
 
-    data = JsonLdExtractor().extract(response.text)  # list of breadcrumb information
-
+    data = JsonLdExtractor().extract(response.text)
     temp = data[0].get("about")  # gets the list of apartments in the about section of the breadcrumb
 
-    # empty array to store housing information
-    houses = []
+    houses = []  # empty array to store housing information
 
     # puts houses into an array
     for h in temp:
@@ -52,12 +51,22 @@ def getHousingList(site, header):
         # repeat process for each apartment complex
         response = requests.get(url=houseURL, headers=header)
         data = JsonLdExtractor().extract(response.text)
-        tempApt = data[0].get("about")
-        price = tempApt.get("priceRange").split()[0]  # get the price (lower bound)
 
-        houses.append(House(houseURL, price))  # create and add house to array
+        # Check if the data list is empty
+        if not data:
+            continue
 
-    return houses  # return houses
+        tempApt = data[0].get("about")  # get information about an apartment
+
+        # Check if tempApt is empty
+        if not tempApt:
+            continue
+
+        price = tempApt.get("priceRange").split()[0]  # get price range
+
+        houses.append(House(houseURL, price))  # add to array
+
+    return houses
 
 
 # MONICA
