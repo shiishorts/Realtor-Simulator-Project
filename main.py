@@ -218,7 +218,7 @@ if __name__ == '__main__':
                 print(house)
             print()  # spacing
                     
-                elif choice == "2":
+        elif choice == "2":
             preferred_rent = input("Enter your preferred monthly rent: $")
             print("\nFinding Housing...")
             houses_result = compare_bfs_dfs(listHouses, preferred_rent)
