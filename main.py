@@ -62,7 +62,7 @@ def getHousingList(site, header):
 
 # MONICA
 def get_adjacent_houses(house, all_houses):
-    adjacency_threshold = 50
+    adjacency_threshold = 100
 
     house_price = int(house.price.replace('$', '').replace(',', ''))
 
@@ -71,7 +71,7 @@ def get_adjacent_houses(house, all_houses):
             and abs(int(other_house.price.replace('$', '').replace(',', '')) - house_price) <= adjacency_threshold]
 
 
-# MAR, MONICA
+# MARIANA, MONICA
 def dfs_traverse_houses(houses, preferred_rent):
     preferred_rent = int(preferred_rent)
 
@@ -107,7 +107,7 @@ def dfs_traverse_houses(houses, preferred_rent):
     return matching_houses
 
 
-# 11/22/2023 MONICA
+# MONICA, MARIANA
 def bfs_traverse_houses(houses, preferred_rent):
     # make into int
     preferred_rent = int(preferred_rent)
