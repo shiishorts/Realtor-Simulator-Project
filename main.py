@@ -157,8 +157,8 @@ def compare_bfs_dfs(houses, preferred_rent):
     print(f"DFS took {end_time_dfs - start_time_dfs:.2f} seconds.")
 
     # reference: https://stackoverflow.com/questions/403421/how-do-i-sort-a-list-of-objects-based-on-an-attribute-of-the-objects
-    bfs_result.sort(key=lambda house: house.url)
-    dfs_result.sort(key=lambda house: house.url)
+    bfs_result.sort(key=lambda house: house.price)
+    dfs_result.sort(key=lambda house: house.price)
 
     # no houses found within that rent range
     if not bfs_result:
@@ -206,10 +206,12 @@ if __name__ == '__main__':
         print() #spacing
 
         if choice == "1":
+            # sort houses by price before printing
+            listHouses.sort(key=lambda house: int(house.price.replace('$', '').replace(',', '')))
             for house in listHouses:
                 print(house)
-            print() #spacing
-
+            print()  # spacing
+                    
         elif choice == "2":
             preferred_rent = input("Enter your preferred monthly rent: $")
             print("\nFinding Housing:")
